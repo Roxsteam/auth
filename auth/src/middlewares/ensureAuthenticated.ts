@@ -1,5 +1,7 @@
 import { AppError } from "@/utils/AppError";
 import { Request, Response, NextFunction } from "express";
+import { verify } from "jsonwebtoken";
+import { authConfig } from "@/configs/auth";
 
 export function ensureAuthenticated(
 request: Request, 
@@ -14,7 +16,15 @@ next: NextFunction){
 
     const [,token]= authHeader.split(" ")
 
-    console.log(token)
+    // Desestruturando o id do usuário, para saber quem está logando.
+   const {sub: user_id} = verify(token, authConfig.jwt.secret)
+
+// Adicionando a propriedade "user" na requisição
+
+   request.user  = {
+    id: String(user_id),
+    }
+
 
     return next()
 
