@@ -11,6 +11,7 @@ async create(request: Request, response: Response) {
       id: "1",
       username: "alex",
       password: "123456", 
+      role: "customer"
     }
 
     if (username !== fakeUser.username || password !== fakeUser.password){
@@ -19,7 +20,7 @@ async create(request: Request, response: Response) {
 
     const {secret, expiresIn} = authConfig.jwt
 
-    const token = sign({}, secret, {
+    const token = sign({ role: fakeUser.role}, secret, {
       expiresIn,
       subject: String(fakeUser.id),
 
